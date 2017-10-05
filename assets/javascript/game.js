@@ -32,6 +32,7 @@ var game = {
     wins: 0,
     losses: 0,
     remainingGuesses: 10,
+    underscores: "_ ",
     lettersGuessed: [], //use push to add guessed letters to this array
     teams: ["bears", "bengals", "bills", "broncos", "browns", "buccaneers", "colts", "cardinals", "chargers", "chiefs", "cowboys", "dolphins", "eagles", "falcons", "fortyniners", "giants", "jaguars", "jets", "lions", "packers", "panthers", "patriots", "redskins", "raiders", "rams", "ravens", "saints", "seahawks", "steelers", "texans", "titans", "vikings"],
 
@@ -55,7 +56,9 @@ document.onkeyup = function (event) {
         var currentWord = game.randomTeam();
         game.remainingGuesses = 10;
         game.lettersGuessed = []; // Clear the lettersGuessed array
-        alert("_ " * (currentWord.length)); // WHY WON'T YOU WORK??
+        console.log(currentWord); // For validation of underscores
+        alert(game.underscores.repeat(currentWord.length)); // need to refactor to push to html instead of alert
+
 
     }
 };
