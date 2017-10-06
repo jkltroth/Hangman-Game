@@ -1,8 +1,7 @@
 // 
 // PSUEDOCODE
-// Start new game (press spacebar to start)
-// Reset guesses to max amount
-// Reset letters already guessed
+// Start new game on page load
+// Display wins, losses, number of guesses remaining, and letters guessed as preset values
 // Computer chooses a random word from the array
 // Display random word as "_ _ _ _ _"
 
@@ -60,26 +59,46 @@ window.onload = function () {
     console.log(game.underscores);
     document.getElementById("wins").innerHTML = (game.wins);
     document.getElementById("losses").innerHTML = (game.losses);
-    document.getElementById("currentWord").innerHTML = ((game.underscores.join(" ")))
+    document.getElementById("currentWord").innerHTML = ((game.underscores.join(" ")));
     document.getElementById("guessesRemaining").innerHTML = (game.remainingGuesses);
 
     // When a key is pressed...
     document.onkeyup = function (event) {
 
-        // Determines which key was pressed.
+        // Assigns the key pressed to variable keyPress
         var keyPress = event.key;
 
+        // Assigns index of 'keyPress' within 'currentWord' array to 'keyIndex'. If 'keyPress' is not within 'currentWord', 'keyIndex' is assigned a value of -1
+        var keyIndex = currentWord.indexOf(keyPress);
+
+        // While the keyIndex value is not -1 (i.e. 'keyPress' is within 'currentWord'), checks for all occurences of 'keyPress' within 'currentWord'...
+        while (keyIndex != -1) {
+
+            // Replaces the 'keyIndex' value of the 'underscores' array with the 'keyPress' value
+            (game.underscores).splice(keyIndex, 1, keyPress);
+            // Pushes new 'underscores' array to html
+            document.getElementById("currentWord").innerHTML = ((game.underscores.join(" ")));
+            // Repeat loop to end of 'currentWord' array...
+            keyIndex = currentWord.indexOf(keyPress, keyIndex + 1);
+        };
 
         //  If spacebar is pressed...
         if (keyPress == " ") {
-            currentWord = game.randomTeam();
-            game.remainingGuesses = 10;
+            game.losses++; // Increase losses by 1
+            game.remainingGuesses = 10; // Resets guesses
             game.lettersGuessed = []; // Clear the lettersGuessed array
+            game.underscores = [];
+            currentWord = (game.randomTeam()).split('');
+
+            for (i = 0; i < currentWord.length; i++) { // Sets underscores
+                game.underscores.push("_");
+            };
+
             console.log(currentWord); // For validation of underscores
-            alert(game.underscores); // need to refactor to push to html instead of alert
+            document.getElementById("currentWord").innerHTML = ((game.underscores.join(" ")));
+            document.getElementById("guessesRemaining").innerHTML = (game.remainingGuesses);
 
 
-        }
+        };
     };
-
 };
