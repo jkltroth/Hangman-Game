@@ -32,33 +32,54 @@ var game = {
     wins: 0,
     losses: 0,
     remainingGuesses: 10,
-    underscores: "_ ",
+    underscores: [], // use push to add underscores per length of currentWord
     lettersGuessed: [], //use push to add guessed letters to this array
     teams: ["bears", "bengals", "bills", "broncos", "browns", "buccaneers", "colts", "cardinals", "chargers", "chiefs", "cowboys", "dolphins", "eagles", "falcons", "fortyniners", "giants", "jaguars", "jets", "lions", "packers", "panthers", "patriots", "redskins", "raiders", "rams", "ravens", "saints", "seahawks", "steelers", "texans", "titans", "vikings"],
+    currentWord: null,
 
     // Randomly chooses a choice from the teams array - Does this need to be set as a variable or run as a function???
     randomTeam: function () {
         return this.teams[Math.floor(Math.random() * this.teams.length)]
-
     },
-
 
 };
 
+// When the window loads...
+window.onload = function () {
 
-document.onkeyup = function (event) {
+    // Converts 'randomTeam' to an array and assigns array to 'currentWord'
+    currentWord = (game.randomTeam()).split('');
 
-    // Determines which key was pressed.
-    var keyPress = event.key;
+    // Pushes '_' into 'underscores' array x times based on length of 'currentWord' array
+    for (i = 0; i < currentWord.length; i++) {
+        game.underscores.push("_");
+    };
 
-    //  If spacebar is pressed...
-    if (keyPress == " ") {
-        var currentWord = game.randomTeam();
-        game.remainingGuesses = 10;
-        game.lettersGuessed = []; // Clear the lettersGuessed array
-        console.log(currentWord); // For validation of underscores
-        alert(game.underscores.repeat(currentWord.length)); // need to refactor to push to html instead of alert
+    // Logs 'currentword' and 'underscores' to console and pushes 'wins, losses, underscores and remainingGuesses' to html
+    console.log(currentWord);
+    console.log(game.underscores);
+    document.getElementById("wins").innerHTML = (game.wins);
+    document.getElementById("losses").innerHTML = (game.losses);
+    document.getElementById("currentWord").innerHTML = ((game.underscores.join(" ")))
+    document.getElementById("guessesRemaining").innerHTML = (game.remainingGuesses);
+
+    // When a key is pressed...
+    document.onkeyup = function (event) {
+
+        // Determines which key was pressed.
+        var keyPress = event.key;
 
 
-    }
+        //  If spacebar is pressed...
+        if (keyPress == " ") {
+            currentWord = game.randomTeam();
+            game.remainingGuesses = 10;
+            game.lettersGuessed = []; // Clear the lettersGuessed array
+            console.log(currentWord); // For validation of underscores
+            alert(game.underscores); // need to refactor to push to html instead of alert
+
+
+        }
+    };
+
 };
