@@ -56,10 +56,9 @@ window.onload = function () {
 
     // Logs 'currentword' and 'underscores' to console and pushes 'wins, losses, underscores and remainingGuesses' to html
     console.log(currentWord);
-    console.log(game.underscores);
     document.getElementById("wins").innerHTML = (game.wins);
     document.getElementById("losses").innerHTML = (game.losses);
-    document.getElementById("currentWord").innerHTML = ((game.underscores.join(" ")));
+    document.getElementById("currentWord").innerHTML = (game.underscores.join(" "));
     document.getElementById("guessesRemaining").innerHTML = (game.remainingGuesses);
 
     // When a key is pressed...
@@ -71,20 +70,55 @@ window.onload = function () {
         // Assigns index of 'keyPress' within 'currentWord' array to 'keyIndex'. If 'keyPress' is not within 'currentWord', 'keyIndex' is assigned a value of -1
         var keyIndex = currentWord.indexOf(keyPress);
 
-        // While the keyIndex value is not -1 (i.e. 'keyPress' is within 'currentWord'), checks for all occurences of 'keyPress' within 'currentWord'...
-        while (keyIndex != -1) {
+        // If keyIndex is -1, subtract one from remainingGuesses and push to html
+        if (keyIndex === -1) {
 
-            // Replaces the 'keyIndex' value of the 'underscores' array with the 'keyPress' value
-            (game.underscores).splice(keyIndex, 1, keyPress);
-            // Pushes new 'underscores' array to html
-            document.getElementById("currentWord").innerHTML = ((game.underscores.join(" ")));
-            // Repeat loop to end of 'currentWord' array...
-            keyIndex = currentWord.indexOf(keyPress, keyIndex + 1);
+            game.remainingGuesses--;
+
+            //Pushes incorrect letter guessed to lettersGuessed array
+            game.lettersGuessed.push(" " + keyPress);
+
+            document.getElementById("guessesRemaining").innerHTML = (game.remainingGuesses);
+            document.getElementById("lettersGuessed").innerHTML = (game.lettersGuessed);
+
+        }
+        //  If keyIndex is greater than -1...
+        else if (keyIndex > -1) {
+            // Execute while loop...
+            while (keyIndex > -1) {
+
+                // Replaces the 'keyIndex' value of the 'underscores' array with the 'keyPress' value
+                game.underscores.splice(keyIndex, 1, keyPress);
+
+                // Repeat loop to end of 'currentWord' array...
+                keyIndex = currentWord.indexOf(keyPress, keyIndex + 1);
+
+                // Pushes new 'underscores' array to html
+                document.getElementById("currentWord").innerHTML = (game.underscores.join(" "));
+            };
+
         };
+
+        //If all letters are guessed, add one to wins and reset all else
+        if (((game.underscores).indexOf("_")) === -1) {
+            game.wins++;
+            game.remainingGuesses = 10; // Resets guesses
+            game.lettersGuessed = []; // Clear the lettersGuessed array
+            game.underscores = [];
+            currentWord = (game.randomTeam()).split('');
+
+            for (i = 0; i < currentWord.length; i++) { // Sets underscores
+                game.underscores.push("_");
+            };
+
+            document.getElementById("wins").innerHTML = (game.wins);
+            document.getElementById("currentWord").innerHTML = ((game.underscores.join(" ")));
+            document.getElementById("guessesRemaining").innerHTML = (game.remainingGuesses);
+            document.getElementById("lettersGuessed").innerHTML = (game.lettersGuessed);
+        }
 
         //  If spacebar is pressed...
         if (keyPress == " ") {
-            game.losses++; // Increase losses by 1
             game.remainingGuesses = 10; // Resets guesses
             game.lettersGuessed = []; // Clear the lettersGuessed array
             game.underscores = [];
@@ -97,7 +131,7 @@ window.onload = function () {
             console.log(currentWord); // For validation of underscores
             document.getElementById("currentWord").innerHTML = ((game.underscores.join(" ")));
             document.getElementById("guessesRemaining").innerHTML = (game.remainingGuesses);
-
+            document.getElementById("lettersGuessed").innerHTML = (game.lettersGuessed);
 
         };
     };
