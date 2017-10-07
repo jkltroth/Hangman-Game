@@ -70,25 +70,43 @@ window.onload = function () {
         // Assigns index of 'keyPress' within 'currentWord' array to 'keyIndex'. If 'keyPress' is not within 'currentWord', 'keyIndex' is assigned a value of -1
         var keyIndex = currentWord.indexOf(keyPress);
 
-        // If keyIndex is -1, subtract one from remainingGuesses and push to html
+        // If keyIndex is -1...
         if (keyIndex === -1) {
+            // And remainingGuesses is greater than 0...
+            if ((game.remainingGuesses) > 1) {
 
-            game.remainingGuesses--;
+                // Subtract one from remaining guesses
+                game.remainingGuesses--;
 
-            //Pushes incorrect letter guessed to lettersGuessed array
-            game.lettersGuessed.push(" " + keyPress);
+                //Pushes incorrect letter guessed to lettersGuessed array
+                game.lettersGuessed.push(" " + (keyPress.toUpperCase()));
 
-            document.getElementById("guessesRemaining").innerHTML = (game.remainingGuesses);
-            document.getElementById("lettersGuessed").innerHTML = (game.lettersGuessed);
+                document.getElementById("guessesRemaining").innerHTML = (game.remainingGuesses);
+                document.getElementById("lettersGuessed").innerHTML = (game.lettersGuessed);
+            } else {
+                // Else if remaining guesses = 0...
 
-        }
-        //  If keyIndex is greater than -1...
-        else if (keyIndex > -1) {
-            // Execute while loop...
+                game.losses++;// Increase losses by 1
+                game.remainingGuesses = 10; // Resets guesses
+                game.lettersGuessed = []; // Clear the lettersGuessed array
+                game.underscores = []; // Clear underscores array
+                currentWord = (game.randomTeam()).split('');
+
+                for (i = 0; i < currentWord.length; i++) {
+                    game.underscores.push("_");
+                };
+
+                document.getElementById("losses").innerHTML = (game.losses);
+                document.getElementById("currentWord").innerHTML = ((game.underscores.join(" ")));
+                document.getElementById("guessesRemaining").innerHTML = (game.remainingGuesses);
+                document.getElementById("lettersGuessed").innerHTML = (game.lettersGuessed);
+            }
+        } else if (keyIndex > -1) {
+            // If keyIndex is greater than -1, execute while loop...
             while (keyIndex > -1) {
 
                 // Replaces the 'keyIndex' value of the 'underscores' array with the 'keyPress' value
-                game.underscores.splice(keyIndex, 1, keyPress);
+                game.underscores.splice(keyIndex, 1, (keyPress.toUpperCase()));
 
                 // Repeat loop to end of 'currentWord' array...
                 keyIndex = currentWord.indexOf(keyPress, keyIndex + 1);
@@ -101,10 +119,10 @@ window.onload = function () {
 
         //If all letters are guessed, add one to wins and reset all else
         if (((game.underscores).indexOf("_")) === -1) {
-            game.wins++;
+            game.wins++; // Add one to wins
             game.remainingGuesses = 10; // Resets guesses
             game.lettersGuessed = []; // Clear the lettersGuessed array
-            game.underscores = [];
+            game.underscores = []; // Clear underscores array
             currentWord = (game.randomTeam()).split('');
 
             for (i = 0; i < currentWord.length; i++) { // Sets underscores
@@ -115,7 +133,7 @@ window.onload = function () {
             document.getElementById("currentWord").innerHTML = ((game.underscores.join(" ")));
             document.getElementById("guessesRemaining").innerHTML = (game.remainingGuesses);
             document.getElementById("lettersGuessed").innerHTML = (game.lettersGuessed);
-        }
+        };
 
         //  If spacebar is pressed...
         if (keyPress == " ") {
